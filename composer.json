@@ -1,0 +1,28 @@
+{
+	"name": "witchiiwork/php-line-notify",
+	"description": "PHP Line Notify.",
+	"type": "library",
+	"license": "MIT",
+	"authors": [
+		{
+			"name": "Witchaphat Muangjansorn",
+			"email": "admin@witchii.work",
+			"homepage": "https://www.witchii.work/",
+			"role": "Developer"
+		}
+	],
+	"minimum-stability": "stable",
+	"require": {
+		"php": ">=5.5",
+		"guzzlehttp/guzzle": ">=6.2.2"
+	},
+	"require-dev": {
+		"phpunit/phpunit": "4.8.12",
+		"satooshi/php-coveralls": "dev-master"
+	},
+	"autoload": {
+		"psr-4": {
+			"W2W\\LINE": "src"
+		}
+	}
+}

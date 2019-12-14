@@ -7,7 +7,7 @@ class Notify {
 	const conAPIURLADR = "https://notify-api.line.me/api/notify";
 	
 	private $strLINETOKEN = null;
-	private $strLINEHTTPS = null;
+	# private $strLINEHTTPS = null;
 	
 	public function __construct($strLINETOKEN) {
 		$this->token = $strLINETOKEN;

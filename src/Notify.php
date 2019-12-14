@@ -49,9 +49,9 @@ class Notify {
 		}
 		
 		$strGETTXTBOD = (string)$strRESPONSEX->getBody();
-		$objJSO = json_decode($strGETTXTBOD, true);
+		$strJSONDCODE = json_decode($strGETTXTBOD, true);
 		
-		if(empty($objJSO["status"]) || empty($objJSO["message"])) {
+		if(empty($strJSONDCODE["status"]) || empty($strJSONDCODE["message"])) {
 			return false;
 		}
 		

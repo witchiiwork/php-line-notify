@@ -4,10 +4,9 @@ namespace W2W\LINE;
 use GuzzleHttp\Client;
 
 class Notify {
-	const conAPIURLADR = "https://notify-api.line.me/api/notify";
+	public const conAPIURLADR = "https://notify-api.line.me/api/notify";
 	
 	private $strLINETOKEN = null;
-	# private $strLINEHTTPS = null;
 	
 	public function __construct($strLINETOKEN) {
 		$this->token = $strLINETOKEN;

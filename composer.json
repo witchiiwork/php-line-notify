@@ -21,7 +21,7 @@
 	},
 	"autoload": {
 		"psr-4": {
-			"W2W\\LINE\\": "src"
+			"WITCH2WORK\\Line\\": "src"
 		}
 	}
 }

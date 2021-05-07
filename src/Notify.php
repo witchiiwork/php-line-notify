@@ -1,56 +1,81 @@
 <?php
-namespace W2W\LINE;
+namespace WITCH2WORK\Line;
 
 use GuzzleHttp\Client;
 
 class Notify {
-	public const conAPIURLADR = "https://notify-api.line.me/api/notify";
+	public const URI = "https://notify-api.line.me/api/notify";
 	
-	private $strLINETOKEN = null;
+	private $token = null;
+	private $client = null;
 	
-	public function __construct($strLINETOKEN) {
-		$this->token = $strLINETOKEN;
+	public function __construct($token) {
+		$this->token = $token;
 		$this->http = new Client();
 	}
 	
-	public function setToken($strLINETOKEN) {
-		$this->token = $strLINETOKEN;
+	public function setToken($token) {
+		$this->token = $token;
 	}
 	
 	public function getToken() {
 		return $this->token;
 	}
 	
-	public function send($strINPTXTMSG, $strINPTXTIMG = null, $strINPTXTSTK = null) {
-		if(empty($strINPTXTMSG)) {
+	public function send($message, $image = null, $sticker = null) {
+		if(empty($message)) {
 			return false;
 		}
 		
-		$strREQUESTXX = ["headers" => ["Authorization" => "Bearer " . $this->token]];
-		$strREQUESTXX["multipart"] = [["name" => "message", "contents" => $strINPTXTMSG]];
+		$request = [
+			"headers" => [
+				"Authorization" => "Bearer " . $this->token
+			]
+		];
+		$request["multipart"] = [
+			[
+				"name" => "message",
+				"contents" => $message
+			]
+		];
 		
-		if(!empty($strINPTXTIMG) && preg_match("#^https?://#", $strINPTXTIMG)) {
-			$strREQUESTXX["multipart"][] = ["name" => "imageThumbnail", "contents" => $strINPTXTIMG];
-			$strREQUESTXX["multipart"][] = ["name" => "imageFullsize", "contents" => $strINPTXTIMG];
-		} elseif(!empty($strINPTXTIMG) && file_exists($strINPTXTIMG)) {
-			$strREQUESTXX["multipart"][] = ["name" => "imageFile", "contents" => fopen($strINPTXTIMG, "r")];
+		if(!empty($image) && preg_match("#^https?://#", $image)) {
+			$request["multipart"][] = [
+				"name" => "imageThumbnail",
+				"contents" => $image
+			];
+			$request["multipart"][] = [
+				"name" => "imageFullsize",
+				"contents" => $image
+			];
+		} elseif(!empty($image) && file_exists($image)) {
+			$request["multipart"][] = [
+				"name" => "imageFile",
+				"contents" => fopen($image, "r")
+			];
 		}
 		
-		if(!empty($strINPTXTSTK) && !empty($strINPTXTSTK["stickerPackageId"]) && !empty($strINPTXTSTK["stickerId"])) {
-			$strREQUESTXX["multipart"][] = ["name" => "stickerPackageId", "contents" => $strINPTXTSTK["stickerPackageId"]];
-			$strREQUESTXX["multipart"][] = ["name" => "stickerId", "contents" => $strINPTXTSTK["stickerId"]];
+		if(!empty($sticker) && !empty($sticker["stickerPackageId"]) && !empty($sticker["stickerId"])) {
+			$request["multipart"][] = [
+				"name" => "stickerPackageId",
+				"contents" => $sticker["stickerPackageId"]
+			];
+			$request["multipart"][] = [
+				"name" => "stickerId",
+				"contents" => $sticker["stickerId"]
+			];
 		}
 		
-		$strRESPONSEX = $this->http->request("POST", Notify::conAPIURLADR, $strREQUESTXX);
+		$response = $this->http->request("POST", Notify::URI, $request);
 		
-		if($strRESPONSEX->getStatusCode() != 200) {
+		if($response->getStatusCode() != 200) {
 			return false;
 		}
 		
-		$strGETTXTBOD = (string)$strRESPONSEX->getBody();
-		$strJSONDCODE = json_decode($strGETTXTBOD, true);
+		$body = (string)$response->getBody();
+		$json = json_decode($body, true);
 		
-		if(empty($strJSONDCODE["status"]) || empty($strJSONDCODE["message"])) {
+		if(empty($json["status"]) || empty($json["message"])) {
 			return false;
 		}
 		
